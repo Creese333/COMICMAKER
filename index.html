@@ -1159,6 +1159,7 @@ function offerFile(title,blob,filename,pics){
  const g=$('#busyGo');g.hidden=false;g.textContent='Save';g.disabled=false;
  let tries=0;
  g.onclick=async()=>{
+  if(!(window.claude&&typeof window.claude.use==='function')){await saveDirect(blob,filename,box);return}
   const dl=dlNS||await capP('downloads');
   if(dl){try{await dl.save({filename,data:blob});busyEnd();toast('Saved!');return}
    catch(e){if(e&&e.code==='declined'){$('#busyP').textContent='Not saved. Tap Save to try again.';return}
@@ -1166,6 +1167,18 @@ function offerFile(title,blob,filename,pics){
     if(++tries<2&&!(e&&/size|large|quota/i.test((e.code||'')+(e.message||'')))){$('#busyP').textContent='That did not work. Tap Save once more.';return}}}
   await saveOnline(blob,filename,box);
  };
+}
+/* Outside Claude (for example the GitHub Pages site): use the phone's Share sheet, else a normal download. */
+async function saveDirect(blob,filename,box){
+ const f=new File([blob],filename,{type:blob.type});
+ if(navigator.canShare&&navigator.share){let ok=false;try{ok=navigator.canShare({files:[f]})}catch(e){}
+  if(ok){try{await navigator.share({files:[f],title:filename});busyEnd();toast('Saved!');return}
+   catch(e){if(e&&e.name==='AbortError'){$('#busyP').textContent='Not saved. Tap Save to try again.';return}}}}
+ const u=URL.createObjectURL(blob),a=mk('a',{href:u,download:filename,className:'btn',textContent:'Download '+filename});
+ a.addEventListener('click',()=>setTimeout(()=>toast('Saved!'),300));
+ try{a.style.display='none';document.body.appendChild(a);a.click();a.remove();a.style.display=''}catch(e){}
+ $('#busyP').textContent='Your file is downloading. If nothing happens, tap the Download button below.';
+ box.insertBefore(a,box.firstChild);setTimeout(()=>URL.revokeObjectURL(u),600000);
 }
 async function saveOnline(blob,filename,box){
  const g=$('#busyGo');g.disabled=true;$('#busyP').textContent='Getting your file ready to open...';
