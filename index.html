@@ -157,6 +157,27 @@ body.snapping .page[data-mast=candy] .mast{background:#ffb3d6}
 .librow{display:flex;gap:8px;flex-wrap:wrap}
 #toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:40;background:#2bb24c;color:#fff;border:3px solid #111;border-radius:12px;padding:10px 16px;font-weight:700;box-shadow:4px 4px 0 #111;max-width:calc(100vw - 24px);text-align:center}
 #toast[hidden]{display:none}
+/* gallery */
+#galBtn{background:#8a3ffc;color:#fff}
+.gcard{background:#fffbe9;border:4px solid #111;border-radius:16px;box-shadow:6px 6px 0 #111;width:min(980px,100%);max-height:calc(100dvh - 32px);display:grid;grid-template-rows:auto auto minmax(0,1fr);color:#111}
+.ghead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:14px 16px;border-bottom:3px solid #111}
+.ghead h2{flex:1;margin:0;font:32px/1 Bangers,Impact,sans-serif;letter-spacing:.04em;min-width:10ch}
+#galMsg{margin:10px 16px 0;font-weight:700}
+#galGrid{list-style:none;margin:0;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;overflow:auto}
+#galGrid li{display:grid;gap:6px;align-content:start}
+#galGrid .gopen{all:unset;cursor:pointer;display:block;border:3px solid #111;border-radius:8px;overflow:hidden;box-shadow:4px 4px 0 #111;background:#fff;aspect-ratio:2/3;transition:transform .12s}
+#galGrid .gopen:hover,#galGrid .gopen:focus-visible{transform:rotate(-2deg) scale(1.03);outline:3px solid #1f6fe5}
+#galGrid .gopen img{display:block;width:100%;height:100%;object-fit:cover}
+#galGrid .gopen.cur{outline:4px solid #2bb24c}
+#galGrid b{font-size:16px;line-height:1.2;overflow-wrap:anywhere}
+#galGrid small{opacity:.75;font-size:13px}
+#galGrid .grow{display:flex;gap:6px;flex-wrap:wrap}
+#galGrid .grow .btn{height:38px;min-width:38px;box-shadow:2px 2px 0 #111}
+#galGrid .btn[data-gdel].sure{background:var(--red);color:#fff}
+#galGrid .none{grid-column:1/-1;font-weight:700}
+@media (prefers-reduced-motion:reduce){#galGrid .gopen{transition:none}}
+@media (max-width:900px){#galBtn .wide-only,#helpBtn .wide-only{display:none}}
+@media (max-width:440px){header .logo{display:none}}
 /* share, export, viewer */
 #shareBtn{background:var(--blue);color:#fff}
 #popShare{grid-template-columns:1fr;width:min(340px,calc(100vw - 16px))}
@@ -179,6 +200,7 @@ body.snapping .panel.on,body.snapping .it.sel{outline:none}
 body.snapping .panel.empty::before,body.snapping .chbox,body.snapping .kcur,body.snapping .it>button{display:none!important}
 .page.nocv canvas{visibility:hidden}
 #busyP{margin:0 0 14px}
+#busyX{margin:0 0 14px;max-height:52vh;overflow:auto}#busyX video{display:block;width:100%;max-height:40vh;background:#000;border-radius:10px}#busyX .pgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:8px}#busyX .pgs img{width:100%;border:2px solid #111;border-radius:6px;-webkit-touch-callout:default}#busyX a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin-bottom:10px;background:#2bb24c;color:#fff}#busyX small{display:block;margin-top:8px;opacity:.75}
 #bringBack{color:var(--cink);font-weight:700}
 #bringBack summary{cursor:pointer;padding:6px 0}
 #pasteTxt{width:100%;height:90px;border:2px solid var(--k);border-radius:8px;font:12px monospace;-webkit-user-select:text;user-select:text;margin:6px 0;background:var(--chrome);color:var(--cink)}
@@ -264,6 +286,7 @@ kbd{display:inline-block;border:2px solid currentColor;border-radius:6px;padding
   <button class="btn" id="layoutBtn" aria-haspopup="true" aria-label="Panel layout"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 11h18M12 11v10"/></svg><span class="wide-only">Panels</span></button>
   <button class="btn" id="styleBtn" aria-haspopup="true" aria-label="Title style" hidden><svg viewBox="0 0 24 24"><path d="M5 20L12 4l7 16M8 13h8"/></svg><span class="wide-only">Title style</span></button>
   <button class="btn" id="saveBtn" aria-label="Save now and see my comics" aria-haspopup="true"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg><span class="wide-only">Save</span></button>
+  <button class="btn" id="galBtn" aria-label="Gallery of my comics"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="9" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/><rect x="14" y="15" width="7" height="6" rx="1"/></svg><span class="wide-only">Gallery</span></button>
   <span id="recBadge">Recording</span>
   <button class="btn" id="exitView">Make my own comic</button>
   <button class="btn" id="shareBtn" aria-label="Share, PDF and video" aria-haspopup="true"><svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v7h14v-7"/></svg><span class="wide-only">Share</span></button>
@@ -321,7 +344,7 @@ kbd{display:inline-block;border:2px solid currentColor;border-radius:6px;padding
  <p id="libMsg" role="status"></p>
  <h3>My comics</h3>
  <ul id="libList"></ul>
- <div class="librow"><button class="btn" id="saveAgain">Save now</button><button class="btn" id="newComic">Start a new comic</button></div>
+ <div class="librow"><button class="btn" id="libGal">See the gallery</button><button class="btn" id="saveAgain">Save now</button><button class="btn" id="newComic">Start a new comic</button></div>
  <details id="bringBack"><summary>Bring back a rescued comic</summary><textarea id="pasteTxt" placeholder="Paste the comic code here" aria-label="Comic code"></textarea><button class="btn" id="pasteGo">Open it</button><p class="pnote2" id="pasteMsg"></p></details>
 </div>
 <div id="toast" role="status" hidden></div>
@@ -334,8 +357,13 @@ kbd{display:inline-block;border:2px solid currentColor;border-radius:6px;padding
   <p class="pnote2">Anyone you send it to can watch your comic, but they can't change it. They need to be signed in to Claude, and first you need to share this page using its <b>Share</b> button. Made changes? Tap <b>Make a share link</b> again to update it.</p></div>
  <p class="pnote2" id="shareNote" hidden></p>
 </div>
+<div class="modal" id="gallery" hidden role="dialog" aria-modal="true" aria-labelledby="galT">
+ <div class="gcard"><div class="ghead"><h2 id="galT">My comics gallery</h2><button class="btn" id="galNew">New comic</button><button class="btn" id="galClose" aria-label="Close gallery">Close</button></div>
+ <p id="galMsg" hidden></p><ul id="galGrid"></ul></div>
+</div>
 <div class="modal" id="busy" hidden role="dialog" aria-modal="true" aria-labelledby="busyT">
  <div class="card"><h2 id="busyT">Working...</h2><p id="busyP"></p>
+  <div id="busyX" hidden></div>
   <div class="row"><button class="btn" id="busyGo" hidden>Save file</button><button class="btn" id="busyClose">Cancel</button></div></div>
 </div>
 <div class="pop" id="popStyle" hidden role="menu" aria-label="Choose title style"></div>
@@ -777,6 +805,7 @@ document.addEventListener('keydown',e=>{
  if(play){if(k==='Escape'&&!play.preview)play.stop=true;return}
  if(VIEW&&!/^(ArrowLeft|ArrowRight|PageUp|PageDown)$/.test(k))return;
  if(!$('#busy').hidden)return;
+ if(!$('#gallery').hidden){if(k==='Escape')closeGallery();return}
  if(!$('#help').hidden){if(k==='Escape')closeHelp();return}
  if(mod&&lk==='z'){e.preventDefault();e.shiftKey?step(redo,undo):step(undo,redo);return}
  if(mod&&lk==='y'){e.preventDefault();step(redo,undo);return}
@@ -1010,6 +1039,56 @@ $('#mvLetgo').addEventListener('click',()=>{const ch=curChar();if(!ch||play)retu
 $('#playBtn').addEventListener('click',()=>playComic());
 $('#stopBtn').addEventListener('click',()=>{if(play)play.stop=true});
 
+/* ===== gallery of saved comics ===== */
+const MASTBG={classic:'#e4252d',midnight:'#111111',sky:'#1f6fe5',burst:'#ff9f00',slime:'#2bb24c',fire:'#ff8a00',ice:'#8fd3ff',candy:'#ff8fc4',space:'#0b1433',spooky:'#3b1d5a'};
+const MASTFG={classic:'#ffd400',midnight:'#e4252d',sky:'#ffffff',burst:'#e4252d',slime:'#d7ff3a',fire:'#ffffff',ice:'#ffffff',candy:'#ffffff',space:'#7fe3ff',spooky:'#a6ff3a'};
+function coverThumb(D){
+ try{const W=200,H=300,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  const m=MASTBG[D.mast]?D.mast:'classic';x.fillStyle=MASTBG[m];x.fillRect(0,0,W,78);
+  const t=String(D.title||'My comic').toUpperCase();let fs=34;x.font=fs+'px Bangers,Impact,sans-serif';
+  while(fs>14&&x.measureText(t).width>W-16){fs-=2;x.font=fs+'px Bangers,Impact,sans-serif'}
+  x.textAlign='center';x.textBaseline='middle';x.lineWidth=4;x.strokeStyle='#111';x.lineJoin='round';x.strokeText(t,W/2,40);x.fillStyle=MASTFG[m];x.fillText(t,W/2,40);
+  const pd=D.pages&&D.pages[0]&&D.pages[0].panels&&D.pages[0].panels[0];
+  const px=8,py=86,pw=W-16,ph=H-py-34;
+  if(pd&&Array.isArray(pd.s)&&pd.s.length){const o=document.createElement('canvas');o.width=pw;o.height=ph;const ox=o.getContext('2d');
+   pd.s.forEach(st=>{try{drawStroke(ox,st,pw,ph,pw*1.08)}catch(e){}});x.drawImage(o,px,py)}x.lineWidth=3;x.strokeStyle='#111';x.strokeRect(px,py,pw,ph);
+  x.fillStyle='#111';x.font='bold 13px "Comic Neue",sans-serif';x.fillText(String(D.byLabel||'Story & art by')+' '+String(D.author||''),W/2,H-17,W-16);
+  x.lineWidth=6;x.strokeRect(0,0,W,H);
+  return c.toDataURL('image/jpeg',.8)}catch(e){return''}
+}
+let galCloud=[];
+function galItems(){
+ const lib=readLib(),items=[];
+ const cur={id:S.id,title:S.title||'My comic',at:Date.now(),cur:true,thumb:coverThumb(S)};items.push(cur);
+ lib.forEach(x=>{if(x.id===S.id)return;let D=null;try{D=JSON.parse(x.data)}catch(e){}items.push({id:x.id,title:x.title||'My comic',at:x.at,thumb:D?coverThumb(D):''})});
+ const have=new Set(items.map(x=>x.id));
+ galCloud.forEach(x=>{if(!have.has(x.id))items.push({id:x.id,title:x.title||'My comic',at:x.at||0,thumb:typeof x.thumb==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(x.thumb)?x.thumb:'',cloud:+x.parts||1})});
+ return items;
+}
+function renderGallery(){
+ const items=galItems();
+ $('#galGrid').innerHTML=items.map(x=>`<li><button class="gopen${x.cur?' cur':''}" ${x.cur?'data-gcur="1"':x.cloud?`data-gcopen="${esc(x.id)}" data-parts="${x.cloud}"`:`data-gopen="${esc(x.id)}"`} aria-label="Open ${esc(x.title)}">${x.thumb?`<img src="${x.thumb}" alt="">`:`<img alt="" src="${coverThumb({title:x.title})}">`}</button><b>${esc(x.title)}</b><small>${x.cur?'Open now':x.cloud?'From your account &middot; '+when(x.at):when(x.at)}</small>${x.cur||x.cloud?'':`<div class="grow"><button class="btn" data-gdel="${esc(x.id)}" aria-label="Delete ${esc(x.title)}"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>`}</li>`).join('');
+}
+function openGallery(){
+ if(VIEW)return;closePops();kbLift();saveToLib();cloudSave();
+ $('#galMsg').hidden=true;renderGallery();$('#gallery').hidden=false;$('#galClose').focus();
+ cloudList().then(cl=>{galCloud=cl;if(!$('#gallery').hidden)renderGallery()});
+}
+function closeGallery(){$('#gallery').hidden=true}
+$('#galBtn').addEventListener('click',openGallery);
+$('#libGal').addEventListener('click',openGallery);
+$('#galClose').addEventListener('click',closeGallery);
+$('#gallery').addEventListener('click',e=>{if(e.target.id==='gallery')closeGallery()});
+$('#galNew').addEventListener('click',async()=>{saveToLib();await cloudSave();loadComic(fresh());saveToLib();closeGallery();toast('Here is a fresh comic! Your other comics are in the gallery.')});
+$('#galGrid').addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.gcur){closeGallery();return}
+ if(b.dataset.gopen){saveToLib();cloudSave();const x=readLib().find(v=>v.id===b.dataset.gopen);if(x){try{loadComic(JSON.parse(x.data));closeGallery();toast('Opened "'+x.title+'"')}catch(_){toast('Could not open that comic.')}}return}
+ if(b.dataset.gcopen){saveToLib();cloudSave();closeGallery();cloudOpen(b.dataset.gcopen,+b.dataset.parts);return}
+ if(b.dataset.gdel){if(!b.classList.contains('sure')){b.classList.add('sure');b.textContent='Sure?';return}
+  cloudDelete(b.dataset.gdel);galCloud=galCloud.filter(v=>v.id!==b.dataset.gdel);const lib=readLib().filter(v=>v.id!==b.dataset.gdel);try{localStorage.setItem(LIBKEY,JSON.stringify(lib))}catch(_){}renderGallery()}
+});
 /* ===== account saving, sharing, PDF and video ===== */
 const capP=n=>(window.claude&&typeof window.claude.use==='function')?Promise.resolve().then(()=>window.claude.use(n)).catch(()=>null):Promise.resolve(null);
 let DB=null,UID=null,cloudTried=false;
@@ -1024,7 +1103,7 @@ async function cloudSave(){
  if(cloudBusy){cloudAgain=true;return cloudBusy}
  cloudBusy=(async()=>{
   if(!await cloud())return false;
-  try{const base='data/users/'+UID+'/'+S.id,snapS=JSON.parse(JSON.stringify(S));const n=await putChunks(base,snapS);await DB.doc(base).set({title:snapS.title||'My comic',at:Date.now(),parts:n});return true}
+  try{const base='data/users/'+UID+'/'+S.id,snapS=JSON.parse(JSON.stringify(S));const n=await putChunks(base,snapS);await DB.doc(base).set({title:snapS.title||'My comic',at:Date.now(),parts:n,thumb:coverThumb(snapS)});return true}
   catch(e){return false}
  })();
  const r=await cloudBusy;cloudBusy=null;
@@ -1060,14 +1139,43 @@ function showViewMsg(t){busy('Hmm!',t,false);$('#busyClose').textContent='Make m
 function exitViewer(){VIEW=false;document.body.classList.remove('viewer');try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}let D=null;try{D=JSON.parse(localStorage.getItem(KEY))}catch(e){}S=normalize(D);undo.length=0;redo.length=0;ui.page=0;render()}
 /* busy card */
 let busyStop=false;
-function busy(t,p,cancel){busyStop=false;$('#busyT').textContent=t;$('#busyP').textContent=p||'';$('#busyGo').hidden=true;const c=$('#busyClose');c.hidden=cancel===false;c.textContent='Cancel';c.onclick=()=>{busyStop=true;busyEnd()};$('#busy').hidden=false}
-function busyEnd(){$('#busy').hidden=true}
-function offerFile(title,blob,filename){
- busy(title,'Tap Save to keep it.',true);$('#busyClose').textContent='Not now';
- const g=$('#busyGo');g.hidden=false;g.textContent='Save';
- g.onclick=async()=>{const dl=await capP('downloads');if(!dl){$('#busyP').textContent='Saving files does not work here. Open this page in Claude to save it.';return}
-  try{await dl.save({filename,data:blob});busyEnd();toast('Saved!')}
-  catch(e){if(e&&e.code==='declined')return;$('#busyP').textContent=e&&e.code==='rate_limited'?'Wait a moment, then tap Save again.':'Could not save the file here.'}};
+function busy(t,p,cancel){busyStop=false;busyX(null);$('#busyT').textContent=t;$('#busyP').textContent=p||'';$('#busyGo').hidden=true;const c=$('#busyClose');c.hidden=cancel===false;c.textContent='Cancel';c.onclick=()=>{busyStop=true;busyEnd()};$('#busy').hidden=false}
+function busyEnd(){$('#busy').hidden=true;busyX(null)}
+let busyURL=null;
+function busyX(node){const x=$('#busyX');x.textContent='';x.hidden=!node;if(node)x.appendChild(node);else if(busyURL){URL.revokeObjectURL(busyURL);busyURL=null}}
+/* Saving files: 1) the Claude "downloads" save, 2) if that is missing or fails, put the file online
+   in the account (assets) and give an Open button that opens it outside the page, where iPad/iPhone
+   can Share > Save, 3) always show the video / page pictures so they can be watched or press-and-held. */
+let dlNS,asNS;
+function prepSave(){if(dlNS===undefined){dlNS=null;capP('downloads').then(d=>dlNS=d)}if(asNS===undefined){asNS=null;capP('assets').then(a=>asNS=a)}}
+const mk=(t,props,kids)=>{const e=document.createElement(t);Object.assign(e,props||{});(kids||[]).forEach(k=>e.appendChild(k));return e};
+function offerFile(title,blob,filename,pics){
+ prepSave();
+ busy(title,'Tap Save to keep it.',true);$('#busyClose').textContent='Done';
+ const box=mk('div');
+ if(blob.type.startsWith('video/')){busyURL=URL.createObjectURL(blob);box.appendChild(mk('video',{src:busyURL,controls:true,playsInline:true,muted:true}))}
+ if(pics&&pics.length){const g=mk('div',{className:'pgs'});pics.forEach((u,i)=>g.appendChild(mk('img',{src:u,alt:'Page '+(i+1)})));box.appendChild(g);box.appendChild(mk('small',{textContent:'Tip: press and hold a page to save it as a picture.'}))}
+ busyX(box);
+ const g=$('#busyGo');g.hidden=false;g.textContent='Save';g.disabled=false;
+ let tries=0;
+ g.onclick=async()=>{
+  const dl=dlNS||await capP('downloads');
+  if(dl){try{await dl.save({filename,data:blob});busyEnd();toast('Saved!');return}
+   catch(e){if(e&&e.code==='declined'){$('#busyP').textContent='Not saved. Tap Save to try again.';return}
+    if(e&&e.code==='rate_limited'){$('#busyP').textContent='Wait a moment, then tap Save again.';return}
+    if(++tries<2&&!(e&&/size|large|quota/i.test((e.code||'')+(e.message||'')))){$('#busyP').textContent='That did not work. Tap Save once more.';return}}}
+  await saveOnline(blob,filename,box);
+ };
+}
+async function saveOnline(blob,filename,box){
+ const g=$('#busyGo');g.disabled=true;$('#busyP').textContent='Getting your file ready to open...';
+ const as=asNS||await capP('assets');
+ if(as&&blob.size<=20*1024*1024){try{
+  const f=new File([blob],filename,{type:blob.type});const r=await as.upload(f);
+  if(r&&r.url){g.hidden=true;$('#busyP').textContent='Tap Open file. It opens in a new tab. On an iPad or iPhone, tap the Share button there and pick Save to Files (or Save Video).';
+   box.insertBefore(mk('a',{className:'btn',href:r.url,target:'_blank',rel:'noopener',textContent:'Open file'}),box.firstChild);return}}catch(e){}}
+ g.disabled=false;
+ $('#busyP').textContent=blob.type.startsWith('video/')?'Saving does not work here. Play the video below, or open this comic in the Claude app or a web browser on claude.ai and try again.':'Saving does not work here. Press and hold each page below to save it as a picture, or open this comic on claude.ai in a web browser and try again.';
 }
 const nextFrame=()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
 const fname=ext=>((S.title||'comic').replace(/[^A-Za-z0-9 _-]+/g,'').trim().slice(0,60)||'comic')+'.'+ext;
@@ -1086,6 +1194,7 @@ async function exportPDF(){
  const keep=ui.page;busy('Making your PDF...','Getting ready',true);
  try{
   await needH2C();await needPDF();
+  const pics=[];prepSave();
   const doc=new window.jspdf.jsPDF({unit:'pt',format:[480,720],orientation:'portrait',compress:true});
   for(let pg=0;pg<S.pages.length;pg++){
    if(busyStop)throw'stop';
@@ -1093,17 +1202,18 @@ async function exportPDF(){
    ui.page=pg;ui.active=-1;render();await nextFrame();
    const cv=await snapPage(Math.min(3,1200/pageEl.clientWidth),false);
    if(pg)doc.addPage([480,720],'portrait');
-   doc.addImage(cv.toDataURL('image/jpeg',.9),'JPEG',0,0,480,720);
+   const u=cv.toDataURL('image/jpeg',.9);pics.push(u);
+   doc.addImage(u,'JPEG',0,0,480,720);
   }
   ui.page=keep;ui.active=0;render();
   if(busyStop)throw'stop';
-  offerFile('Your PDF is ready!',doc.output('blob'),fname('pdf'));
+  offerFile('Your PDF is ready!',doc.output('blob'),fname('pdf'),pics);
  }catch(e){ui.page=keep;ui.active=0;render();if(e==='stop')return;busy('Oops!','Could not make the PDF. Please try again.',true);$('#busyClose').textContent='OK'}
 }
 function pickMime(){if(!window.MediaRecorder)return null;for(const m of['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'])try{if(MediaRecorder.isTypeSupported(m))return m}catch(e){}return null}
 async function exportVideo(){
  closePops();kbLift();select(null);ui.csel=null;
- const mime=pickMime(),rc=document.createElement('canvas');
+ const mime=pickMime(),rc=document.createElement('canvas');prepSave();
  if(!mime||!rc.captureStream){busy('Sorry!','This browser cannot make videos. Try Safari on an iPad or iPhone, or Chrome on a computer.',true);$('#busyClose').textContent='OK';return}
  busy('Getting ready...','',false);
  try{await needH2C()}catch(e){busy('Oops!','Could not get the video maker ready. Please try again.',true);$('#busyClose').textContent='OK';return}
@@ -1117,7 +1227,7 @@ async function exportVideo(){
   requestAnimationFrame(loop)};
  requestAnimationFrame(loop);
  const chunks=[];let mr;
- try{mr=new MediaRecorder(rc.captureStream(30),{mimeType:mime,videoBitsPerSecond:4000000})}catch(e){try{mr=new MediaRecorder(rc.captureStream(30))}catch(e2){rec.on=false;busy('Sorry!','This browser cannot make videos.',true);$('#busyClose').textContent='OK';return}}
+ try{mr=new MediaRecorder(rc.captureStream(30),{mimeType:mime,videoBitsPerSecond:2500000})}catch(e){try{mr=new MediaRecorder(rc.captureStream(30))}catch(e2){rec.on=false;busy('Sorry!','This browser cannot make videos.',true);$('#busyClose').textContent='OK';return}}
  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
  const stopped=new Promise(r=>mr.onstop=r);
  document.body.classList.add('recording');
